@@ -358,7 +358,8 @@
                         </a>
                     </div>
                 </div>
-                <form class="contact-form">
+                <form class="contact-form" id="contactForm">
+                    <input type="hidden" name="access_key" value="e8f99406-a58f-4c6c-96e6-273cc8e1764d">
                     <div class="form-group">
                         <label for="name">Your Name</label>
                         <input type="text" id="name" name="name" required>
@@ -375,6 +376,7 @@
                         <label for="message">Message</label>
                         <textarea id="message" name="message" rows="5" required></textarea>
                     </div>
+                    <div id="formStatus" class="form-status"></div>
                     <button type="submit" class="btn btn-primary btn-full">Send Message</button>
                 </form>
             </div>

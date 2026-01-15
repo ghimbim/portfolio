@@ -396,4 +396,51 @@ window.addEventListener('scroll', () => {
     });
 });
 
+// ===========================
+// Contact Form Submission
+// ===========================
+const contactForm = document.getElementById('contactForm');
+const formStatus = document.getElementById('formStatus');
+
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        
+        // Show loading state
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+        formStatus.textContent = '';
+        formStatus.className = 'form-status';
+        
+        try {
+            const formData = new FormData(contactForm);
+            
+            const response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                formStatus.textContent = '✓ Message sent successfully! I\'ll get back to you soon.';
+                formStatus.className = 'form-status success';
+                contactForm.reset();
+            } else {
+                throw new Error(data.message || 'Failed to send message');
+            }
+        } catch (error) {
+            formStatus.textContent = '✗ Failed to send message. Please try again or email me directly.';
+            formStatus.className = 'form-status error';
+            console.error('Form submission error:', error);
+        } finally {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    });
+}
+
 console.log('Portfolio website loaded successfully! 🚀');
