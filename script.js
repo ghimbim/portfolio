@@ -225,9 +225,14 @@ window.addEventListener('scroll', () => {
 const contactForm = document.getElementById('contactForm');
 const formStatus = document.getElementById('formStatus');
 
+console.log('Contact form found:', contactForm);
+console.log('Form status div found:', formStatus);
+
 if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+        console.log('Form submitted!');
         
         const submitBtn = contactForm.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
@@ -241,12 +246,17 @@ if (contactForm) {
         try {
             const formData = new FormData(contactForm);
             
+            console.log('Sending to Web3Forms...');
+            console.log('Access key:', formData.get('access_key'));
+            
             const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
                 body: formData
             });
             
+            console.log('Response status:', response.status);
             const data = await response.json();
+            console.log('Response data:', data);
             
             if (data.success) {
                 formStatus.textContent = '✓ Message sent successfully! I\'ll get back to you soon.';
@@ -256,9 +266,10 @@ if (contactForm) {
                 throw new Error(data.message || 'Failed to send message');
             }
         } catch (error) {
-            formStatus.textContent = '✗ Failed to send message. Please try again or email me directly.';
+            formStatus.textContent = '✗ Failed to send message. Error: ' + error.message;
             formStatus.className = 'form-status error';
             console.error('Form submission error:', error);
+            console.error('Error details:', error.stack);
         } finally {
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
